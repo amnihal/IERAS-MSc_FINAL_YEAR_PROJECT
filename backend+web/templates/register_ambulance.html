@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="main-content-area">
+    <div class="page-header">
+        <h2 class="page-title">Ambulance Registry</h2>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAmbulanceModal">
+            <i class="fas fa-plus"></i> Add Ambulance
+        </button>
+    </div>
+
+    <div class="card data-table-card">
+        <div class="card-body">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Sl no.</th>
+                        <th>Vehicle Number</th>
+                        <th>Type</th>
+                        <th>Driver</th>
+                        <th class="text-center">Available</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ambulance in ambulances %}
+                    <tr>
+                        <td data-label="#ID">{{ forloop.counter }}</td>
+                        <td data-label="Vehicle Number">{{ ambulance.vehicle_number }}</td>
+                        <td data-label="Type">{{ ambulance.ambulance_type }}</td>
+                        <td data-label="Driver">{{ ambulance.driver.name }}</td>
+                        <td data-label="Available" class="text-center">
+                            {% if ambulance.is_available %}
+                            <span class="status-badge status-available">Yes</span>
+                            {% else %}
+                            <span class="status-badge status-not-available">No</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center actions-column">
+                            <button class="btn-icon edit-btn" data-bs-toggle="modal"
+                                data-bs-target="#updateAmbulanceModal{{ ambulance.id }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <a href="{% url 'delete_ambulance' ambulance.id %}" class="btn-icon delete-btn"
+                                onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No ambulances registered yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addAmbulanceModal" tabindex="-1" aria-labelledby="addAmbulanceModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form method="post" action="{% url 'register_ambulance' %}">
+            {% csrf_token %}
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <h5 class="modal-title" id="addAmbulanceModalLabel">Register New Ambulance</h5>
+                    <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="vehicle_number" class="form-label">Vehicle Number</label>
+                            <input type="text" id="vehicle_number" name="vehicle_number" class="custom-form-control"
+                                placeholder="Enter vehicle number" required maxlength="20">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="ambulance_type" class="form-label">Ambulance Type</label>
+                            <select id="ambulance_type" name="ambulance_type" class="custom-form-select" required>
+                                <option value="Basic" selected>Basic</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Neonatal">Neonatal</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="is_available" class="form-label">Availability</label>
+                            <select id="is_available" name="is_available" class="custom-form-select" required>
+                                <option value="true" selected>Available</option>
+                                <option value="false">Not Available</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer custom-modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Register Ambulance
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% for ambulance in ambulances %}
+<div class="modal fade" id="updateAmbulanceModal{{ ambulance.id }}" tabindex="-1"
+    aria-labelledby="updateAmbulanceModalLabel{{ ambulance.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form method="post" action="{% url 'update_ambulance' ambulance.id %}">
+            {% csrf_token %}
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <h5 class="modal-title" id="updateAmbulanceModalLabel{{ ambulance.id }}">Update Ambulance</h5>
+                    <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="vehicle_number_{{ ambulance.id }}" class="form-label">Vehicle Number</label>
+                            <input type="text" id="vehicle_number_{{ ambulance.id }}" name="vehicle_number"
+                                class="custom-form-control" value="{{ ambulance.vehicle_number }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ambulance_type_{{ ambulance.id }}" class="form-label">Ambulance Type</label>
+                            <select id="ambulance_type_{{ ambulance.id }}" name="ambulance_type" class="custom-form-select" required>
+                                <option value="Basic" {% if ambulance.ambulance_type == "Basic" %}selected{% endif %}>Basic</option>
+                                <option value="Advanced" {% if ambulance.ambulance_type == "Advanced" %}selected{% endif %}>Advanced</option>
+                                <option value="Neonatal" {% if ambulance.ambulance_type == "Neonatal" %}selected{% endif %}>Neonatal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="is_available_{{ ambulance.id }}" class="form-label">Availability</label>
+                            <select id="is_available_{{ ambulance.id }}" name="is_available" class="custom-form-select"
+                                required>
+                                <option value="true" {% if ambulance.is_available %}selected{% endif %}>Available
+                                </option>
+                                <option value="false" {% if not ambulance.is_available %}selected{% endif %}>Not
+                                    Available</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer custom-modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Ambulance
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

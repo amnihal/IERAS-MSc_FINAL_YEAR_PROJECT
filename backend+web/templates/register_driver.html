@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="main-content-area">
+    <div class="page-header">
+
+        <h2 class="page-title">Driver Registry</h2>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDriverModal">
+            <i class="bi bi-plus-lg"></i> Add Driver
+        </button>
+    </div>
+
+
+    <div class="card data-table-card">
+        <div class="card-body">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Sl.no</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Ambulance</th>
+                        
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for driver in drivers %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ driver.name }}</td>
+                        <td>{{ driver.contact }}</td>
+                        <td>{{ driver.email }}</td>
+                        <td>{% with driver.ambulance_set.first as amb %}
+                                {% if amb %}
+                                    {{ amb.vehicle_number }}
+                                    ({{ amb.ambulance_type }})
+                                {% else %}
+                                    <span class="text-muted">Not assigned</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td class="text-center actions-column">
+                            <button class="btn-icon edit-btn" data-bs-toggle="modal"
+                                data-bs-target="#editDriverModal{{ driver.id }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form method="post" action="{% url 'delete_driver' driver.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-icon delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this driver?')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No drivers registered yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addDriverModal" tabindex="-1" aria-labelledby="addDriverModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form method="post" action="{% url 'register_driver' %}">
+            {% csrf_token %}
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <h5 class="modal-title" id="addDriverModalLabel">Register New Driver</h5>
+                    <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" id="name" name="name" class="custom-form-control"
+                                placeholder="Enter full name" required maxlength="100">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contact" class="form-label">Contact Number</label>
+                            <input type="tel" id="contact" name="contact" class="custom-form-control"
+                                placeholder="Enter contact number" required minlength="10">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" name="email" class="custom-form-control"
+                                placeholder="Enter email" maxlength="100">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" name="password" class="custom-form-control"
+                                placeholder="Enter password" required minlength="5">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ambulance" class="form-label">Assign Ambulance (optional)</label>
+                            <select id="ambulance" name="ambulance" class="custom-form-select" required>
+                                <option value="" selected>-- Select Ambulance --</option>
+                                {% for ambulance in ambulances %}
+                                <option value="{{ ambulance.id }}">{{ ambulance.vehicle_number }} ({{ambulance.ambulance_type }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer custom-modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save2"></i> Register Driver
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% for driver in drivers %}
+<div class="modal fade" id="editDriverModal{{ driver.id }}" tabindex="-1" aria-labelledby="editDriverModalLabel{{ driver.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form method="post" action="{% url 'update_driver' driver.id %}">
+            {% csrf_token %}
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <h5 class="modal-title" id="editDriverModalLabel{{ driver.id }}">Edit Driver</h5>
+                    <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" name="name" class="custom-form-control" value="{{ driver.name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" name="contact" class="custom-form-control" value="{{ driver.contact }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="custom-form-control" value="{{ driver.email }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Assign Ambulance</label>
+                            <select name="ambulance" class="custom-form-select" required>
+                                <option value="">-- Select Ambulance --</option>
+                                {% for ambulance in ambulances %}
+                                    <option value="{{ ambulance.id }}" {% if driver.ambulance_set.first.id == ambulance.id %}selected{% endif %}>
+                                        {{ ambulance.vehicle_number }} ({{ ambulance.ambulance_type }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer custom-modal-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

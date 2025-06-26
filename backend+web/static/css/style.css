@@ -1,0 +1,892 @@
+/* Custom CSS Variables */
+:root {
+    /* Main Background Colors */
+    --color-dark-bg-primary: #1c1c1c; /* Deep dark background */
+    --color-dark-bg-secondary: #0F0F1A; /* Even darker for some areas */
+
+    /* Glassmorphism Properties */
+    --glass-background: rgba(255, 255, 255, 0.05); /* Very subtle white for transparency */
+    --glass-blur-amount: 15px; /* How much blur to apply */
+    --glass-border-color: rgba(255, 255, 255, 0.1); /* Thin light border for definition */
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Prominent shadow for depth */
+
+    /* Accent Colors (derived from the image) */
+    --color-accent-purple: #8A2BE2; /* Primary purple for highlights */
+    --color-accent-purple-light: #C24BE3; /* Lighter glowing purple */
+    --color-accent-green: #4CAF50; /* Vibrant green for positive/chart lines */
+    --color-accent-green-light: #8BC34A; /* Lighter green for profit margin */
+    --color-accent-blue: #0F3460; /* Deep blue for certain elements */
+    --color-accent-pink: #FF0077; /* For the blurred background blob */
+
+    /* Alert Colors (from image_abfe12.png) */
+    --alert-stable-bg: #f8f5d8;
+    --alert-serious-bg: #f4a236;
+    --alert-critical-bg: #ff1100; /* Yellow */
+    --alert-stable-text: #1d1d1d;
+    --alert-serious-text: #1d1d1d;
+    --alert-critical-text: #1d1d1d;
+    --alert-update-bg: #2196F3; /* Blue */
+    --alert-update-text: #fff;
+
+    /* Text Colors */
+    --color-text-light: #E0E0E0; /* Primary light text for readability */
+    --color-text-muted: #B0B0B0; /* Subdued light text for secondary info */
+    --color-text-dark: #202020; /* Dark text for active sidebar links if needed */
+    --color-positive-change: #00E676; /* Bright green for positive percentage */
+    --color-negative-change: #FF5252; /* Red for negative percentage */
+    --color-critical-red: #F44336; /* Reusing existing critical alert red for delete button */
+
+    /* Spacing and Borders */
+    --spacing-unit: 1rem;
+    --border-radius-card: 20px;
+    --border-radius-button: 12px;
+    --border-radius-element: 8px;
+
+    /* NEW OR ADJUSTED VARIABLES FOR REGISTRY PAGE */
+    --color-primary-button: #8A2BE2; /* A strong purple for primary actions, same as accent-purple */
+    --color-secondary-button: #505050; /* A dark grey for secondary actions */
+    --color-table-header-bg: rgba(255, 255, 255, 0.08); /* Slightly lighter glass for table header */
+    --color-table-row-hover: rgba(255, 255, 255, 0.03); /* Subtle hover for table rows */
+}
+
+/* Base Styles */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-dark-bg-primary);
+    color: var(--color-text-light);
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Background Blurred Shapes */
+body::before,
+body::after {
+    content: '';
+    position: fixed; /* Changed to fixed */
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    z-index: -1;
+}
+
+body::before {
+    background: radial-gradient(circle, var(--color-accent-purple-light) 0%, rgba(138, 43, 226, 0.2) 70%, transparent 100%);
+    width: 450px;
+    height: 450px;
+    top: -150px;
+    left: -200px;
+}
+
+body::after {
+    background: radial-gradient(circle, var(--color-accent-pink) 0%, rgba(255, 0, 119, 0.2) 70%, transparent 100%);
+    width: 350px;
+    height: 350px;
+    bottom: -100px;
+    right: -150px;
+    filter: blur(70px);
+}
+
+/* Layout */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background: var(--glass-background);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border-right: 1px solid var(--glass-border-color);
+    border-radius: 0 var(--border-radius-card) var(--border-radius-card) 0;
+    box-shadow: var(--glass-shadow);
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2.5rem;
+    padding-left: 0.5rem;
+}
+
+.sidebar-brand .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--color-accent-purple);
+}
+
+.sidebar-brand .brand-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+}
+
+.sidebar-nav ul, .sidebar-footer-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li, .sidebar-footer-nav li {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-nav .nav-link, .sidebar-footer-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--border-radius-element);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav .nav-link i, .sidebar-footer-nav .nav-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.sidebar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-light);
+}
+
+.sidebar-nav .nav-link.active {
+    background: linear-gradient(90deg, var(--color-accent-purple) 0%, var(--color-accent-purple-light) 100%);
+    color: var(--color-text-light);
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+    font-weight: 600;
+}
+
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    padding: 2.5rem;
+    box-sizing: border-box;
+    margin-left: 280px; /* Adjusted to 280px to match sidebar width */
+}
+
+
+
+
+/* Top Header */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    padding: 0.5rem 0;
+}
+
+.header-left .dashboard-overview-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-light);
+}
+
+.header-left .dashboard-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.header-right .hospital-name {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.notification-icon {
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.notification-icon:hover {
+    color: var(--color-text-light);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: var(--color-text-light);
+    cursor: pointer;
+}
+
+.user-profile .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-accent-purple);
+}
+
+.user-profile i {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+}
+
+/* Card General Styling */
+.card {
+    background: var(--glass-background);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border: 1px solid var(--glass-border-color);
+    border-radius: var(--border-radius-card);
+    box-shadow: var(--glass-shadow);
+    padding: 2rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    margin-bottom: 1.5rem;
+}
+
+/* Styles for the new 'stat-card' type (small cards) */
+.card.stat-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    position: relative;
+}
+
+.card.stat-card .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.card.stat-card .card-title-small {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.card.stat-card .main-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+    margin-bottom: 0.2rem;
+}
+
+.card.stat-card .sub-text {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-top: 0;
+}
+
+.card.stat-card .change-positive,
+.card.stat-card .change-negative {
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.card.stat-card .change-positive { color: var(--color-positive-change); }
+.card.stat-card .change-negative { color: var(--color-negative-change); }
+
+/* Icons for stat cards - positioned in the corner like in image_abfe12.png */
+.card.stat-card .icon-container {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 2.5rem;
+    opacity: 0.2;
+}
+
+.card.stat-card .ambulance-icon i { color: #8A2BE2; }
+.card.stat-card .driver-icon i { color: #4CAF50; }
+.card.stat-card .cases-icon i { color: #FF0077; }
+.card.stat-card .beds-icon i { color: #2196F3; }
+
+
+/* Styles for the "Live Alerts" Big Card */
+.card.live-alerts-card {
+    grid-column: span 4;
+    padding: 2.5rem;
+}
+
+.live-alerts-card .alerts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.live-alerts-card .new-alerts-badge {
+    background-color: var(--color-accent-pink);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.live-alerts-card .alerts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.live-alerts-card .alert-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 1rem 1.2rem;
+    border-radius: var(--border-radius-element);
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+}
+
+.live-alerts-card .alert-item:last-child {
+    margin-bottom: 0;
+}
+
+.live-alerts-card .alert-item:hover {
+    transform: translateX(5px);
+}
+
+.live-alerts-card .alert-item i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.live-alerts-card .alert-item p {
+    margin: 0;
+    line-height: 1.4;
+    color: inherit;
+}
+
+.live-alerts-card .alert-item .alert-type {
+    font-weight: 700;
+    margin-right: 5px;
+}
+
+/* Specific Alert Item Colors */
+.alert-item.Stable {
+    background-color: var(--alert-stable-bg);
+    color: var(--alert-stable-text);
+}
+
+.alert-item.Serious {
+    background-color: var(--alert-serious-bg);
+    color: var(--alert-serious-text);
+}
+
+.alert-item.Critical {
+    background-color: var(--alert-critical-bg);
+    color: var(--alert-critical-text);
+}
+
+.alert-item.update {
+    background-color: var(--alert-update-bg);
+    color: var(--alert-update-text);
+}
+
+/* ======================================= */
+/* NEW STYLES FOR AMBULANCE REGISTRY PAGE */
+/* ======================================= */
+
+/* Page Header for Registry */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem; /* Consistent spacing with dashboard grid */
+}
+
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+
+/* Custom Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-button);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--color-accent-purple) 0%, var(--color-accent-purple-light) 100%);
+    color: var(--color-text-light);
+    box-shadow: 0 4px 15px rgba(21, 16, 27, 0.4);
+}
+
+.live-alerts-card .alert-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Ensures button goes below on smaller screens */
+    width: 100%;      /* Make it fill the .alert-item */
+    gap: 1rem;
+}
+
+.live-alerts-card .alert-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.call-driver-btn {
+    padding: 4px 10px;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    background-color: transparent;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.call-driver-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, var(--color-accent-purple) 100%, var(--color-accent-purple-light) 0%);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--color-secondary-button);
+    color: var(--color-text-light);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-secondary-button);
+    transform: translateY(-2px);
+}
+
+/* Icon Buttons for Table Actions */
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: var(--border-radius-element);
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-icon:hover {
+    color: var(--color-text-light);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.edit-btn { color: var(--color-accent-blue); }
+.delete-btn { color: var(--color-critical-red); }
+
+
+/* Card for Table Container */
+.card.data-table-card {
+    padding: 1.5rem;
+}
+
+/* Custom Table Styles */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    color: var(--color-text-light);
+}
+
+.custom-table thead {
+    background-color: var(--color-table-header-bg);
+}
+
+.custom-table th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--glass-border-color);
+}
+
+.custom-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.custom-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.custom-table tbody tr:hover {
+    background-color: var(--color-table-row-hover);
+}
+
+.custom-table td {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+}
+
+.custom-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 0.3em 0.7em;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-available {
+    background-color: var(--color-positive-change);
+    color: #1A1A2E; /* Dark text for contrast */
+}
+
+.status-not-available {
+    background-color: var(--color-secondary-button);
+    color: var(--color-text-light);
+}
+
+
+/* Custom Modal Styles */
+.modal-content.custom-modal-content {
+    background: var(--glass-background);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border: 1px solid var(--glass-border-color);
+    border-radius: var(--border-radius-card);
+    box-shadow: var(--glass-shadow);
+    color: var(--color-text-light);
+    overflow: hidden;
+}
+
+.modal-header.custom-modal-header {
+    background-color: rgba(138, 43, 226, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-light);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header.custom-modal-header .modal-title {
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.btn-close.custom-btn-close {
+    filter: invert(1);
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.btn-close.custom-btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body.custom-modal-body {
+    padding: 2rem;
+}
+
+.modal-footer.custom-modal-footer {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Custom Form Control Styles (input, select) */
+.form-label {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.custom-form-control,
+.custom-form-select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius-element);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-light);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.custom-form-control::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.7;
+}
+
+.custom-form-control:focus,
+.custom-form-select:focus {
+    border-color: var(--color-accent-purple);
+    box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.custom-form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23B0B0B0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    cursor: pointer;
+}
+
+.custom-form-select option {
+    background-color: var(--color-dark-bg-primary);
+    color: var(--color-text-light);
+}
+
+/* Basic Grid for Modal Body Forms */
+/* .row.g-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+.col-md-6 {
+    grid-column: span 1;
+} */
+
+
+/* Responsive Adjustments */
+@media (max-width: 1400px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .stat-card {
+        grid-column: span 1;
+    }
+    .live-alerts-card {
+        grid-column: span 2;
+    }
+    .main-content {
+        padding: 2rem;
+    }
+    .card.stat-card .icon-container {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        width: 90px;
+        padding: 1.5rem 0.5rem;
+    }
+    .sidebar-brand .brand-name {
+        display: none;
+    }
+    .sidebar-nav .nav-link span, .sidebar-footer-nav .nav-link span {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 90px;
+        padding: 1.5rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .stat-card,
+    .live-alerts-card {
+        grid-column: span 1;
+    }
+    .top-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .user-profile span {
+        display: none;
+    }
+    .dashboard-overview-title {
+        font-size: 1.5rem;
+    }
+    .dashboard-subtitle, .hospital-name {
+        font-size: 0.8rem;
+    }
+
+    /* Responsive Table for 992px and below */
+    .custom-table thead {
+        display: none;
+    }
+
+    .custom-table, .custom-table tbody, .custom-table tr, .custom-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .custom-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid var(--glass-border-color);
+        border-radius: var(--border-radius-element);
+        overflow: hidden;
+        background: var(--glass-background);
+        padding: 0.5rem;
+    }
+
+    .custom-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .custom-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: calc(50% - 20px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 600;
+        color: var(--color-text-muted);
+    }
+    .custom-table td:last-child {
+        border-bottom: none;
+    }
+    .actions-column {
+        text-align: center !important;
+        padding: 10px !important;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border-color);
+        border-radius: 0;
+        padding: 1rem;
+        display: none;
+    }
+    .main-content {
+        margin-left: 0; /* Important: reset margin for very small screens */
+        padding: 1rem;
+    }
+    .card {
+        padding: 1.2rem;
+    }
+    .live-alerts-card .alert-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 0.8rem;
+    }
+    .live-alerts-card .alert-item i {
+        margin-bottom: 5px;
+    }
+    /* Modal responsive adjustments for very small screens */
+    .modal-body.custom-modal-body .row.g-3 {
+        grid-template-columns: 1fr; /* Stack form fields vertically */
+    }
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 2rem;
+    align-items: center;
+    
+}
+
+
+.login-card {
+    margin-top: 0;    
+    margin-bottom: 0;
+    background-color: var(--glass-background);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    padding: 2.5rem;
+    text-align: center;
+    border-radius: var(--border-radius-card);
+    box-shadow: var(--glass-shadow);
+
+}
+

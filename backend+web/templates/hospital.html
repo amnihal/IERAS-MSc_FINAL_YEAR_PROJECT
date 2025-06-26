@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<header class="top-header">
+    <div class="header-left">
+        <h1 class="dashboard-overview-title">Dashboard Overview</h1>
+
+    </div>
+    <div class="header-right">
+        <span class="hospital-name">{{ hospital_name }}</span>
+        <i class="fas fa-bell notification-icon"></i>
+    </div>
+</header>
+
+<section class="dashboard-grid">
+
+    <div class="card stat-card">
+        <div class="card-content">
+            <h2 class="card-title-small">Ambulances</h2>
+            <span class="main-stat-value">{{ total_ambulances }}</span>
+            <p class="sub-text">{{ ambulances_in_use }} in use</p>
+            <div class="icon-container ambulance-icon"><i class="fas fa-truck-medical"></i></div>
+        </div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="card-content">
+            <h2 class="card-title-small">Available Drivers</h2>
+            <span class="main-stat-value">{{ available_drivers }}</span>
+            <p class="sub-text">Assign</p>
+            <div class="icon-container driver-icon"><i class="fas fa-user"></i></div>
+        </div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="card-content">
+            <h2 class="card-title-small">Cases Handled</h2>
+            <span class="main-stat-value">{{ cases_handled }}</span>
+            <p class="sub-text">{{ cases_pending }} pending</p>
+            <div class="icon-container cases-icon"><i class="fas fa-hospital-user"></i></div>
+        </div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="card-content">
+            <h2 class="card-title-small">Available Beds</h2>
+            <span class="main-stat-value">98</span>
+            <p class="sub-text">Total 230</p>
+            <div class="icon-container beds-icon"><i class="fas fa-bed"></i></div>
+        </div>
+    </div>
+
+    
+    <div class="card live-alerts-card">
+        <div class="alerts-header">
+            <h2 class="card-title">Live Alerts</h2>
+            <span class="new-alerts-badge">0 New</span>
+        </div>
+        <ul class="alerts-list">
+            <li class="alert-item emergency">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p><strong class="alert-type">EMPTY</strong> No incoming cases</p>
+            </li>
+        </ul>
+    </div>
+    
+</section>
+
+<script>
+async function fetchAlerts() {
+    try {
+        const response = await fetch('/api/active-cases/', {
+            credentials: 'include'
+        });
+        const cases = await response.json();
+
+        const alertsList = document.querySelector('.alerts-list');
+        alertsList.innerHTML = ''; // Clear existing alerts
+
+        const badge = document.querySelector('.new-alerts-badge');
+
+        if (cases.length === 0) {
+            // Show empty state
+            const li = document.createElement('li');
+            li.classList.add('alert-item', 'update');  // Use your preferred class
+
+            li.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <p><strong class="alert-type">EMPTY</strong> No incoming cases</p>
+            `;
+            alertsList.appendChild(li);
+            badge.textContent = `0 New`;
+        } else {
+            // Populate case alerts
+            cases.forEach(caseItem => {
+                const li = document.createElement('li');
+                const conditionClass = caseItem.patient_condition.charAt(0).toUpperCase() + caseItem.patient_condition.slice(1).toLowerCase();
+                li.classList.add('alert-item', conditionClass);
+
+                li.innerHTML = `
+                    <div class="alert-content">
+                        <div class="alert-info">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>
+                                <strong class="alert-type">Emergency!</strong>
+                                Case Incoming. Patient Condition 
+                                <strong>${caseItem.patient_condition.toUpperCase()}</strong>
+                            </p>
+                        </div>
+                        <a href="tel:${caseItem.driver_contact}" class="btn call-driver-btn">📞 Call Driver</a>
+                    </div>
+                `;
+                alertsList.appendChild(li);
+            });
+
+            badge.textContent = `${cases.length} New`;
+        }
+    } catch (error) {
+        console.error('Error fetching alerts:', error);
+    }
+}
+
+// Initial fetch + polling
+fetchAlerts();
+setInterval(fetchAlerts, 500);
+</script>
+
+{% endblock %}

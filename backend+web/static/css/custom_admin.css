@@ -1,0 +1,72 @@
+/* Example custom colors */
+:root {
+    --color-dark-bg-primary: #1e1e2f;
+    --color-text-light: #ffffff;
+    --color-accent-purple-light: #8a2be2;
+    --color-accent-pink: #ff0077;
+}
+
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-dark-bg-primary);
+    color: var(--color-text-light);
+}
+
+/* Background Blurred Shapes */
+body::before,
+body::after {
+    content: '';
+    position: fixed; /* Changed to fixed */
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    z-index: -1;
+}
+
+body::before {
+    background: radial-gradient(circle, var(--color-accent-purple-light) 0%, rgba(138, 43, 226, 0.2) 70%, transparent 100%);
+    width: 450px;
+    height: 450px;
+    top: -150px;
+    left: -200px;
+}
+
+body::after {
+    background: radial-gradient(circle, var(--color-accent-pink) 0%, rgba(255, 0, 119, 0.2) 70%, transparent 100%);
+    width: 350px;
+    height: 350px;
+    bottom: -100px;
+    right: -150px;
+    filter: blur(70px);
+}
+
+#header {
+    background-color: #3b3b3b36;
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+}
+
+.module caption {
+    background: #444 !important;
+    color: #fff !important;
+}
+
+.button, .submit-row input {
+    background-color: #2a2a72 !important;
+    color: white !important;
+}
+
+#admin-dashboard-wrapper {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+#app-list {
+    flex: 1;
+}
+
+#recent-actions {
+    width: 300px;
+}
