@@ -1,0 +1,40 @@
+name: ieras_buddy
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http:
+  geolocator:
+  google_maps_flutter:
+  geocoding:
+  permission_handler:
+  web_socket_channel:
+  wakelock_plus:
+  flutter_polyline_points:
+  flutter_typeahead:
+  shared_preferences:
+  flutter_map:
+  latlong2:
+  audioplayers:
+  url_launcher:
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/img/
+    - assets/sound/
