@@ -45,8 +45,7 @@ IERAS is an intelligent, real-time emergency response platform developed as part
 - Nearby vehicles (unregistered) receive proximity alerts.
 - Geofencing triggers route-clearance notifications to minimize siren usage.
 <p float="left">
-  <img src="https://github.com/user-attachments/assets/3ad79747-20a9-4943-b45b-71c576aa00c0" alt="Ambulance Driver App" width="400"/>
-  <img src="https://github.com/user-attachments/assets/783d8f46-65bd-4915-9035-d6983596f1ca" alt="Ambulance Driver App" width="400"/>
+  <img src="https://github.com/user-attachments/assets/3ad79747-20a9-4943-b45b-71c576aa00c0" alt="Ambulance Driver App" width="800"/>
 </p>
 
 ### 🔹 Admin Panel
