@@ -82,8 +82,11 @@ IERAS is an intelligent, real-time emergency response platform developed as part
 ## 🚀 How to Run the Backend
 This project uses Django for backend and Flutter for mobile/driver-side UI. To properly serve static files (like CSS) for the admin panel and run WebSocket-based features (like live ambulance alerts), follow the two-terminal setup below.
 
-# Run Django development server for admin panel and web frontend
+Run Django development server for admin panel and web frontend
+```
 python manage.py runserver
-
-# For flutter connection
+```
+For flutter connection
+```
 daphne -b 0.0.0.0 -p 8000 ieras.asgi:application
+```
